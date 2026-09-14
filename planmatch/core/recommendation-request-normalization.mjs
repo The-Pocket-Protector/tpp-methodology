@@ -1,4 +1,4 @@
-import { CSNP_CONDITION_KEYS } from './shared-recommendation-constants.mjs';
+import { CSNP_CONDITION_KEYS } from '../../shared/shared-recommendation-constants.mjs';
 export const NON_CARE_RANKING_WEIGHT_KEYS = [
     'premium',
     'out_of_pocket',

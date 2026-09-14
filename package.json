@@ -1,9 +1,8 @@
 {
   "name": "@the-pocket-protector/methodology",
-  "version": "0.2.0",
-  "private": true,
+  "version": "1.0.0",
   "type": "module",
-  "description": "PlanMatch decision rules and TPP data-processing functions with synthetic examples and explicit scope.",
+  "description": "Source-derived PlanMatch rules, data transformations, and cost calculations with runnable synthetic examples.",
   "engines": {
     "node": ">=22.18.0"
   },
@@ -11,6 +10,17 @@
     "test": "node --test test/*.test.mjs",
     "demo": "node examples/demo.mjs",
     "demo:pipeline": "node examples/data-pipeline.mjs",
-    "demo:planmatch": "node examples/planmatch.mjs"
+    "demo:planmatch": "node examples/planmatch.mjs",
+    "demo:calculator": "node examples/cost-calculator.mjs"
+  },
+  "license": "MIT",
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/The-Pocket-Protector/tpp-methodology.git"
+  },
+  "exports": {
+    "./planmatch": "./planmatch/index.mjs",
+    "./data-pipeline": "./data-pipeline/index.mjs",
+    "./cost-calculator": "./cost-calculator/index.mjs"
   }
 }

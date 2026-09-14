@@ -1,4 +1,4 @@
-import { CSNP_CONDITION_KEYS } from './shared-recommendation-constants.mjs';
+import { CSNP_CONDITION_KEYS } from '../../shared/shared-recommendation-constants.mjs';
 export function isCsnpPlan(plan) {
     return /c-?snp|chronic/i.test(String(plan.snp_type || ''));
 }

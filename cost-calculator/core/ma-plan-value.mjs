@@ -46,3 +46,8 @@ export function getNetAnnualExposureAfterGivebackValue(plan, context = {}) {
         return null;
     return roundMoney(getNetPlanAnnualCostAfterGivebackValue(plan, context) + moop);
 }
+export function getMonthlyValue(plan, context = {}) {
+    return roundMoney(getPartBGivebackValue(plan, context)
+        - getMonthlyPremiumValue(plan)
+        - (getEstimatedAnnualDrugCostValue(plan) / 12));
+}

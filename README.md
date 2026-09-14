@@ -1,50 +1,53 @@
 # The Pocket Protector Methodology
 
-A collection of PlanMatch decision rules and data-processing functions extracted from The Pocket Protector's JavaScript and TypeScript source. Each example has a stated scope, synthetic inputs, and tests you can inspect.
+Open-source decision rules, data transformations, and cost calculations extracted from The Pocket Protector application. Licensed under [MIT](LICENSE), with runnable examples, tests, and a [source manifest](source-manifest.json).
 
-This is a private draft for review. It includes PlanMatch's core decision rules and their supporting calculations. It does not include the complete application or live data services, and it does not establish the website's deployed configuration.
+| Module | What is included |
+| --- | --- |
+| [PlanMatch](planmatch/) | Candidate eligibility, doctor and drug evidence, benefit and pharmacy scoring, preference ranking, care filters, and the cost-ranking/stay-or-switch model. |
+| [Data pipeline](data-pipeline/) | CMS landscape staging, plan and formulary normalization, NADAC and MFP price transformations and validation, NPPES provider-record transformation, and drug-response normalization. Includes a local CSV-to-JSON runner. |
+| [Cost calculator](cost-calculator/) | Part D drug out-of-pocket estimates, deductible/copay/coinsurance rules, annual caps, premium and giveback arithmetic, and Medigap premium selection. |
 
-## What you can inspect
+These are the core functions from a recorded application source snapshot, with the standalone adaptations documented below. They do not include the complete website, live data feeds, database operations, or production configuration. Each module explains its inputs and boundaries.
 
-| Module | What it does | What it does not do |
-| --- | --- | --- |
-| [PlanMatch algorithm](planmatch/) | Includes candidate eligibility rules, doctor/drug evaluation, benefit and pharmacy scoring, base and preference ranking, care filtering, and the cost-ranking/stay-or-switch model. | Fetch live data, run the complete API, or independently reproduce a website result without its data and configuration. |
-| [Data pipeline](data-pipeline/) | Parses individual formulary CSV rows and normalizes drug-search responses, including generic/brand flags and missing metadata. | Download source files, import a database, join plan/formulary/provider datasets, or reproduce the complete ingestion process. |
-| [Pharmacy ranking](src/pharmacy-ranking.mts) | Orders already-prepared plans by pharmacy data availability, doctor coverage, covered drug count, then estimated annual cost. | Retrieve plan data, verify a provider network, calculate drug prices, or reproduce the separate Medicare Advantage recommendation flow. |
-| [Preference weights](src/preference-weights.mts) | Normalizes four non-care preference weights; uses the source defaults when inputs total zero. | Set the final ranking on its own; care coverage and other ranking decisions happen elsewhere. |
-| [Premium values](src/premium-values.mts) | Reads monthly plan premiums and Part B giveback values, and subtracts giveback from the plan premium. | Calculate a member's complete cost of coverage, including Part B premiums, drug costs, medical care, eligibility, or enrollment timing. |
+## Run it
 
-A Part B giveback is a benefit for the member. It is not a payment to the broker. A negative result from the premium helper is an arithmetic result, not a promise that all insurance costs are negative or that a member will receive that amount in cash.
-
-## Try the examples
-
-Use Node.js 22.18 or newer. No Python, package installation, credentials, or database are needed.
+Use Node.js 22.18 or newer. No Python, package installation, credentials, or database is needed.
 
 ```sh
-npm run demo
-npm run demo:pipeline
+git clone https://github.com/The-Pocket-Protector/tpp-methodology.git
+cd tpp-methodology
 npm run demo:planmatch
+npm run demo:pipeline
+npm run demo:calculator
 npm test
 ```
 
-The sample plans, drug rows, identifiers, and amounts are invented. They are not quotes, recommendations, or real member records. The tests cover CSV quoting and identifier preservation, drug normalization, meaningful ordering, missing-cost handling, stable ties, non-mutation, and the selected premium and weighting functions.
+Import a module directly:
 
-## Why publishing functions helps
+```js
+import { computeDrugOOP } from './cost-calculator/index.mjs';
+import { processDataset } from './data-pipeline/index.mjs';
+import { runProposedRanking } from './planmatch/index.mjs';
+```
 
-You can inspect the inputs the functions read, run the examples, and challenge the assumptions. These functions do not read broker compensation fields. That narrow observation does not prove that every upstream data choice, filtering step, configuration, or live recommendation is unaffected by compensation. A text scan for words such as “commission” would not establish that either.
+The examples use invented plans, identifiers, prices, and settings. They are not quotes or real member records. The original small [pharmacy-ranking](src/pharmacy-ranking.mts), [preference-weight](src/preference-weights.mts), and [premium](src/premium-values.mts) exports remain available; `npm run demo` runs those examples.
 
-## Relationship to the website
+## Relationship to the application
 
-[source-manifest.json](source-manifest.json) records the source version, file hashes, extracted declarations, and adapters. Function logic is retained; unrelated declarations and internal comments are excluded. PlanMatch's TypeScript annotations are removed to produce runnable JavaScript. Its candidate/base-score wrappers and catalog input are documented in the [extraction boundaries](planmatch/README.md#extraction-boundaries). The pharmacy types are copied from the shared contract into local aliases so this package has no private imports.
+[source-manifest.json](source-manifest.json) records the application snapshot, source paths and hashes, retained declarations, and published file hashes. The source application repository is private; the manifest gives maintainers a traceable comparison point, not a public attestation of every live result.
 
-Before a website page describes these functions as the code behind its results, the source owner must verify the deployed version and the complete calculation path. The website should link to the specific release and describe the published scope accurately.
+Runtime function bodies are retained after removing TypeScript and internal comments and redirecting imports. The standalone adaptations are explicit:
 
-For later updates, compare against the current source, review functional differences, update the manifest and examples, and publish a new version with a short change note. Keep the new public history: readers should be able to see how the methodology changes.
+- PlanMatch's candidate and base-score wrappers accept prepared inputs; a supplied map replaces loading the shared-benefit catalog. See [PlanMatch extraction boundaries](planmatch/README.md#extraction-boundaries).
+- The [pipeline runner](data-pipeline/process-dataset.mjs) connects the original transformations to local CSV input and JSON output. Its orchestration and CLI are new.
+- [Telemetry](shared/telemetry.mjs) is a no-op: existing breadcrumb call sites send and store nothing.
+- Shared calculations live once across the three modules. Literal null separators in the landscape source are escaped for readable source files without changing their value.
 
-## What is excluded
+A source snapshot alone cannot reproduce a website result: inputs, data freshness, configuration, and the selected ranking path also matter. The module documentation identifies known missing-value behavior and assumptions so readers can examine them alongside the calculations.
 
-This draft contains no member data, carrier agreements or payment schedules, database queries, credentials, infrastructure configuration, enrollment routes, or production logs. It does not copy the history of the application or the former public repository.
+## Changes and contributions
 
-## License
+This repository starts with a clean history, without importing the application's history. Future releases retain their history so changes remain reviewable. See [CONTRIBUTING.md](CONTRIBUTING.md) for reporting issues and proposing changes.
 
-No open-source license has been granted in this private draft. Select and approve a license before public release. The previous public repository uses MIT; using MIT again is an option for the owner to approve. Public code without an appropriate license should not be promoted as reusable open source.
+The repository contains no member records, carrier agreements or payment schedules, credentials, infrastructure configuration, database queries, or production logs. MIT covers the code in this repository; it does not grant rights to third-party datasets or the Pocket Protector name and logo.

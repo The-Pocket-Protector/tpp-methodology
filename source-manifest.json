@@ -1,7 +1,7 @@
 {
   "snapshot": "be6eb913f78030ce1bdcd7c5e980412d6a2799e6",
   "reviewedOn": "2026-09-14",
-  "scope": "PlanMatch core decision rules and selected data-processing functions, with explicit adapters for prepared data; excludes the full API, live datasets, and deployed configuration.",
+  "scope": "PlanMatch core decision rules, data pipeline transformations and validation, and cost calculations; excludes application orchestration, live datasets, databases, and deployed configuration.",
   "modules": [
     {
       "file": "src/pharmacy-ranking.mts",
@@ -73,6 +73,221 @@
       "publishedFileSha256": "d814445d551b353f160647c3e04ff615ccf858c7422d8f391a780cdcb3b1d406"
     },
     {
+      "file": "data-pipeline/core/load-ma-landscape.mjs",
+      "source": "apps/api/scripts/load-ma-landscape.js",
+      "declarations": [
+        "stageFile",
+        "parseCsv",
+        "buildColumnMap",
+        "CMS_HEADERS",
+        "CONTRACT_YEAR_HEADER",
+        "checkRowShape",
+        "PK_COLUMNS",
+        "UPDATE_COLUMNS",
+        "TARGET_COLUMNS",
+        "checkGuard",
+        "MIN_RATIO_VS_PRIOR"
+      ],
+      "sourceFileSha256": "b357f0da8aa3029f181e540605b88a2ce146568b2bf65023e156b6da7817144d",
+      "publishedFileSha256": "58ca0d6cf713dc1829e36a2c4f4309a02fabbde03d436234e4c2dc4adc435e34",
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter. Literal null delimiters escaped as \\x00 with identical runtime values."
+    },
+    {
+      "file": "data-pipeline/core/load-nadac-prices.mjs",
+      "source": "apps/api/scripts/load-nadac-prices.js",
+      "declarations": [
+        "parseCsvLine",
+        "buildColIdx",
+        "transformRow",
+        "parseEffectiveDate"
+      ],
+      "sourceFileSha256": "2f97fcd5eb0e018fe53ba02a8e079280d7a23c1eebccca4805a6cc6eec5c6b7b",
+      "publishedFileSha256": "d2810183a4ee3262e7890a172320fd4270196b7d958e6a7a94b3dd216755622f",
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
+    },
+    {
+      "file": "data-pipeline/core/load-mfp-prices.mjs",
+      "source": "apps/api/scripts/load-mfp-prices.js",
+      "declarations": [
+        "parseCsvLine",
+        "buildColIdx",
+        "transformRow",
+        "normalizeNdc11",
+        "deriveNdc9",
+        "parseMfpDate",
+        "parseNumericOrNull",
+        "dedupeDuplicateEffectiveRows",
+        "findDuplicateKeys",
+        "validatePriceRange",
+        "PRICE_MIN",
+        "PRICE_MAX",
+        "validateDrugFamilyCounts",
+        "EXPECTED_IPAY_FAMILY_TOKENS",
+        "pickBestCrosswalk",
+        "CROSSWALK_REL_PRIORITY",
+        "buildRemovedMarkerRows"
+      ],
+      "sourceFileSha256": "bbf790758f9fd66c1789844587d0529c6f042b7ebce5482b6894387eb16359a5",
+      "publishedFileSha256": "f6f984168aecee75507b024c412fe2e300bfb7c3d5518467739fc76c9b133645",
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
+    },
+    {
+      "file": "data-pipeline/core/load-nppes.mjs",
+      "source": "apps/api/scripts/load-nppes.js",
+      "declarations": [
+        "transformRow",
+        "EXPECTED_COLUMNS",
+        "at",
+        "COL",
+        "TAXONOMY_SLOTS"
+      ],
+      "sourceFileSha256": "d5557620d3d43e9e2f530ad3074a7cb7a249ec78ca263de423e6d40fa92ce056",
+      "publishedFileSha256": "8736d927f3a1f2cd3732352f7b707b1c04390f493dcbfb4375bcf7dacb6fcea2",
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
+    },
+    {
+      "file": "data-pipeline/core/recommendation-adapters.mjs",
+      "source": "apps/api/lib/recommendation-adapters.mts",
+      "declarations": [
+        "normalizeContractId",
+        "normalizeText",
+        "normalizePlanId",
+        "normalizeSegmentId",
+        "parseCmsMoney",
+        "NULLISH_MONEY",
+        "parseCmsInteger",
+        "normalizePdpPlanInfoRow",
+        "firstValue",
+        "requireField",
+        "adaptPdpPlanInfoRows",
+        "normalizePdpFormularyDrugRow",
+        "normalizeYesNo",
+        "adaptPdpFormularyDrugRows",
+        "normalizePdpBeneficiaryCostRow",
+        "normalizeCostType",
+        "normalizeMaLandscapePlanRow",
+        "normalizeMaSegmentId",
+        "adaptMaLandscapePlanRows",
+        "normalizeMaPartBReductionRow",
+        "normalizeMaBenefitDetailRow",
+        "parseBenefitJsonValue",
+        "normalizeMaVbidRow",
+        "maPlanIncludesPartD"
+      ],
+      "sourceFileSha256": "4cae8e136519cb5a5b9315e56e9b7dcfc0c16708b280ed7fead8ba4b81ccee9a",
+      "publishedFileSha256": "b958bbc804ad8d8b4be010ef4aa28c75884311bc8f96c7f4d8d8133cf13d75e3",
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
+    },
+    {
+      "file": "cost-calculator/core/oop-estimator.mjs",
+      "source": "apps/api/lib/oop-estimator.mts",
+      "declarations": [
+        "computeDrugOOP",
+        "unestimable",
+        "resolveFillsPerYear",
+        "DEFAULT_FILLS_BY_DAYS_SUPPLY",
+        "resolveCascade",
+        "DEFAULT_CASCADE",
+        "BEN_COST_COLUMNS",
+        "parseCostType",
+        "COST_TYPE_COPAY",
+        "COST_TYPE_COINSURANCE",
+        "resolveCoverageFallback",
+        "roundCents",
+        "costTypeLabel",
+        "aggregatePlanDrugOOP",
+        "isMailCombo"
+      ],
+      "sourceFileSha256": "19c25133462863255e05c974c7410cc6db4839d261d68d38cf9cb6837d8c9b96",
+      "publishedFileSha256": "594a749255857767522e282947cbaea9e1e1d76ef33eb479bf02d790f3e344c4",
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
+    },
+    {
+      "file": "cost-calculator/core/medicare-constants.mjs",
+      "source": "apps/api/lib/medicare-constants.mts",
+      "declarations": [
+        "getMedicareConstantsStrict",
+        "currentPlanYear"
+      ],
+      "sourceFileSha256": "690c89cbc0e7edc16f45061ed1ce71afa06794296288edf22cdbcf3f4dbfbe30",
+      "publishedFileSha256": "fe33b83bfa847b137542d27cfba0182609d8559d27560d18bde046f8a0e6bdfd",
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
+    },
+    {
+      "file": "shared/shared-medicare-constants.mjs",
+      "source": "packages/contracts/src/medicare-constants.ts",
+      "declarations": [
+        "getMedicareConstantsStrict",
+        "getMedicareConstants",
+        "currentPlanYear",
+        "CONSTANTS_BY_YEAR",
+        "CONSTANTS_2026"
+      ],
+      "sourceFileSha256": "9501bc9d5a9ec4adce1007e4d7cb61491a1feb53ed463afe38adaae8dc6d2870",
+      "publishedFileSha256": "ce3720d85360d99404d3ef56b0a34c97b435849d4bef59a9a18e865063f63bc2",
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
+    },
+    {
+      "file": "cost-calculator/core/ma-plan-value.mjs",
+      "source": "apps/api/recommend/ma-plan-value.mts",
+      "declarations": [
+        "getAnnualCostValue",
+        "numberValue",
+        "getPlanAnnualCostValue",
+        "roundMoney",
+        "getMonthlyPremiumValue",
+        "getEstimatedAnnualDrugCostValue",
+        "getNetPlanAnnualCostAfterGivebackValue",
+        "getPartBGivebackValue",
+        "getNetAnnualExposureAfterGivebackValue",
+        "getMonthlyValue",
+        "getEffectiveMonthlyPremiumValue"
+      ],
+      "sourceFileSha256": "43eb859c9561ec864caa059b3812ab0009a8f993ab302700ba5c79620cdf677e",
+      "publishedFileSha256": "666d5e13174b922d403dd1fd77e85cf68fdb44a46aa08e7e5a1d4210cba3fcff",
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
+    },
+    {
+      "file": "cost-calculator/core/medigap-standard-rates.mjs",
+      "source": "apps/api/lib/medigap-standard-rates.mts",
+      "declarations": [
+        "getDefaultPremiumInfo",
+        "toNumber",
+        "getStandardPremium",
+        "getDiscountPremium",
+        "standardizeMedigapRows",
+        "planIsStandardDefaulted",
+        "getCarrierBaseName",
+        "TIER_SUFFIX_RE",
+        "isPreferredVariant",
+        "variantRank",
+        "isStandardVariant",
+        "premiumSortValue"
+      ],
+      "sourceFileSha256": "9b949f0f6a0290689470e80b308494613f06378054ce178e6268daabfab10dc6",
+      "publishedFileSha256": "3f7fea993e4a8941e1c07ff664e2378930bbdb3010b24444c90b401a078b566d",
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
+    },
+    {
+      "file": "cost-calculator/core/medigap-pricing.mjs",
+      "source": "apps/web/src/tools/lib/medigap-pricing.ts",
+      "declarations": [
+        "getMedigapDisplayedPremium",
+        "getMedigapStandardPremiumValue",
+        "pickPositiveNumber",
+        "getMedigapSource",
+        "isRecord",
+        "STANDARD_PREMIUM_KEYS",
+        "getMedigapGiIssuePremiumValue",
+        "GI_PREMIUM_KEYS",
+        "getMedigapPreferredPremiumValue",
+        "PREFERRED_PREMIUM_KEYS"
+      ],
+      "sourceFileSha256": "c5bc843316834981c40df2d8fad4c74461cc1bbb4fbdbc0261d2fcfa1d804296",
+      "publishedFileSha256": "ecd6e9a6199559d31a627f09fcaa3bb4fcacc69f2e1db2d893109a39f4e0f976",
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
+    },
+    {
       "file": "planmatch/core/ranking.mjs",
       "source": "apps/api/services/recommendations/ma-proposed-ranking-service.mts",
       "declarations": [
@@ -123,7 +338,7 @@
       ],
       "sourceFileSha256": "094532ada3a88a7c851e080d4f704b6854819a6c4dbc17c257a8087fdda5548b",
       "publishedFileSha256": "bf14da10a7893ccdeefbfd1ae14bac04b067895c3454c2cd22cb9f9122133a47",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/recommendation-request-normalization.mjs",
@@ -147,8 +362,8 @@
         "normalizeRecommendCsnpConditionKeys"
       ],
       "sourceFileSha256": "1b672e86f124179ad60908015bbaaec144cde150098a61b1760d6600c0dc8285",
-      "publishedFileSha256": "401eb5be433925bd2887967a61d6778d892f07319687509c8cf7e2cf77fbac48",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "publishedFileSha256": "836fbd5c5cda5d86011e1183332cc142f442f508d6a12dde2d31562ee5a44c54",
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/ma-giveback-ranking.mjs",
@@ -167,7 +382,7 @@
       ],
       "sourceFileSha256": "7a0656c2a1991288d85472d213fc020644699d0641e6169f5b69f6aa3be2e3a0",
       "publishedFileSha256": "44699bc5c2f73e1eec9881d0f8df8ad908b22ab6181d0a6bb0b575a54d3c5f53",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/preference-ranking.mjs",
@@ -256,27 +471,8 @@
         "stablePlanIdentity"
       ],
       "sourceFileSha256": "dc88bf9c2a380380ad6b11aed53c4b92e7e7c0e7bce5fbb4ca920d1e5d38f631",
-      "publishedFileSha256": "fdb93dbd243b4a0f2e9e53cdf29fe990ea7bf8c8b8afcddf3b7b5c0f710224df",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
-    },
-    {
-      "file": "planmatch/core/ma-plan-value.mjs",
-      "source": "apps/api/recommend/ma-plan-value.mts",
-      "declarations": [
-        "getEffectiveMonthlyPremiumValue",
-        "roundMoney",
-        "getMonthlyPremiumValue",
-        "numberValue",
-        "getPartBGivebackValue",
-        "getNetPlanAnnualCostAfterGivebackValue",
-        "getPlanAnnualCostValue",
-        "getAnnualCostValue",
-        "getEstimatedAnnualDrugCostValue",
-        "getNetAnnualExposureAfterGivebackValue"
-      ],
-      "sourceFileSha256": "43eb859c9561ec864caa059b3812ab0009a8f993ab302700ba5c79620cdf677e",
-      "publishedFileSha256": "4692796cbe5b47dd4a453609bad8efbe9fafa2e287c67122e652efce42445cf3",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "publishedFileSha256": "6d6237b7bf8e859a8fb69466b93215bf3b20176c232301d70fcfdd34f8429dcc",
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/provider-coverage-weight-flag.mjs",
@@ -286,7 +482,7 @@
       ],
       "sourceFileSha256": "2d72a319de78f195e58bfd7e3f779140f29e48643126ab6d12d30021aa5d7b8a",
       "publishedFileSha256": "bfb43a315c74489f0b551e00e4a789d337a26580fb1d64cd81714fa9b830b1f3",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/employer-cost-comparison-flag.mjs",
@@ -296,7 +492,7 @@
       ],
       "sourceFileSha256": "05b3f2ea0a7c985c7b0552151f111546571f0e9a4b7a6a7248302007e485e3a0",
       "publishedFileSha256": "eb8daf6603928592ec77ed3e1100ab917032fc21bd6cfbf909c708ff73afcebc",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/care-coverage.mjs",
@@ -310,7 +506,7 @@
       ],
       "sourceFileSha256": "95f8f03a73580d105e87c029ffaedcf7e82274d77a9dcb46a89788c876978a94",
       "publishedFileSha256": "212ec972c4ed34b3e7bb4a2aeceb8982e75106f84ccc357570ae9d51f5d9226f",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/provider-network-policy.mjs",
@@ -325,7 +521,7 @@
       ],
       "sourceFileSha256": "09658c0183deb4ab25ec3c2dffacabe481b796d833aad44f36c9453053532734",
       "publishedFileSha256": "25f0648175f6f159fdc286f9e3c06f20d563546acc37996723b9f9d3dc7ba7bf",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/preference-inputs.mjs",
@@ -338,7 +534,7 @@
       ],
       "sourceFileSha256": "74f2ed33b71307c19a08bfeac829801ac969a5beeb78a6ea6123b179a7e2b06c",
       "publishedFileSha256": "d3366ab06940fb363bbf459c31b98e7e934e67341d2234f52f2d48ae75c01b47",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/shared.mjs",
@@ -349,7 +545,7 @@
       ],
       "sourceFileSha256": "31a46b74cc2835b7b3a9c70d99f2692bceda44cf911d3656b7a0fc1e76c73e01",
       "publishedFileSha256": "67edd380aa20e5525e4d8402342e4321729c91605f1ed3bbc221a53c7fce2192",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/priorities.mjs",
@@ -364,7 +560,7 @@
       ],
       "sourceFileSha256": "ae441118f8a8dfded8594b2634a6789204fb038bc1d0f33e5ca8201a05c259a9",
       "publishedFileSha256": "390a376e1d94c8f7487fdcc2e862473d0a36cdf2ca0841a07f0ba8e811a70e7e",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/csnp-condition-match.mjs",
@@ -391,18 +587,18 @@
         "decideCsnpAdmission"
       ],
       "sourceFileSha256": "d6ba28d242d945c4b227170bd1248f57e8a2f7c1ac7f8aafa05e83f8e79c26a6",
-      "publishedFileSha256": "a30513e69029b3f5234cf42d48d157d3b3b1b39fd835db4c3e9dab28cf33ba08",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "publishedFileSha256": "b9cc5285b87be33c89ca0b11a421998152013ded75533a280a1f10731fa9b0a7",
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
-      "file": "planmatch/core/shared-recommendation-constants.mjs",
+      "file": "shared/shared-recommendation-constants.mjs",
       "source": "packages/contracts/src/recommend.ts",
       "declarations": [
         "CSNP_CONDITION_KEYS"
       ],
       "sourceFileSha256": "035989f847878c1d959a49f446290ddc802db809a5da47a4e14f06cd35396bd7",
       "publishedFileSha256": "8a282d0d5100613617d0f31a010d839e8773a12920445333042f45e913594b8d",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/ma-drug-scoring-service.mjs",
@@ -414,8 +610,8 @@
         "roundCents"
       ],
       "sourceFileSha256": "16937aa1dfbaa338cc420cfdc349d3df6058437e0dbd1f7428ef0181121ef6e5",
-      "publishedFileSha256": "c1114bd38ccc833dc487a642840c0583f3df2e8cd7eb9654551bccd9c2d8df43",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "publishedFileSha256": "78020f6349905dda90e73997d95cc0f34c94abe540d239cced47f7c7838184d6",
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/ma-drug-classification.mjs",
@@ -425,7 +621,7 @@
       ],
       "sourceFileSha256": "f084dd955d92695ffe8c005e990078cdedb31f06e17fa976c6a61291615070ac",
       "publishedFileSha256": "850d33c7cccf3bc0510a87aa28a2feafab58f6bc6945dc8071e6482581530e89",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/drug-detail-contract.mjs",
@@ -441,7 +637,7 @@
       ],
       "sourceFileSha256": "912708f5cc202f8bc05c509fdd8482b1b0c79e63bc41cd8f941bf58539f74ec2",
       "publishedFileSha256": "caea732f3433960a920d98a1821d817ef66ccce83e90107b53d0dc3ddc245c12",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/drug-display-format.mjs",
@@ -471,7 +667,7 @@
       ],
       "sourceFileSha256": "44fa388c85dc16c6e5037ab014dcb1922d07f527d73048cffb6f5fb2d3c25839",
       "publishedFileSha256": "8c232e9ae9e82ee54711f8201dd792972a7108c0c74e9ba712f9f8e0ecb90f5c",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/drug-dosage.mjs",
@@ -481,7 +677,7 @@
       ],
       "sourceFileSha256": "581824d232b2a5c18541eee771f319dd7eca54b07ec33ce860dd0a6e303b9bb7",
       "publishedFileSha256": "fba8ba14fe5b90a42aada9a5fafa75b4a60ef7d07e05fd47e88d85e529fc8f85",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/off-formulary-pricing.mjs",
@@ -494,19 +690,8 @@
         "roundCents"
       ],
       "sourceFileSha256": "87b6f234a5fb9a1482d287c6ed3c2a8f789ac56c690a6ba5c48fe3c6575d6a76",
-      "publishedFileSha256": "701413b31c9f77f8eee3d86d4c03ef1fe09225317b9f274cce74e8808cb9166e",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
-    },
-    {
-      "file": "planmatch/core/oop-estimator.mjs",
-      "source": "apps/api/lib/oop-estimator.mts",
-      "declarations": [
-        "resolveFillsPerYear",
-        "DEFAULT_FILLS_BY_DAYS_SUPPLY"
-      ],
-      "sourceFileSha256": "19c25133462863255e05c974c7410cc6db4839d261d68d38cf9cb6837d8c9b96",
-      "publishedFileSha256": "4d83d3499cc923150008ab8b55914eefcdf5b490a00e4ba5744068f6ff7df835",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "publishedFileSha256": "932bc7c2e1ab6e880e2d445d7381e95621b7dd5fe37a54a5cdae70bc9a4f138f",
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/generic-substitution.mjs",
@@ -518,19 +703,7 @@
       ],
       "sourceFileSha256": "665513463c87063105accec360e49c4b6536f4fdc558b5d43c96b5a3385cee07",
       "publishedFileSha256": "754a33fd49ffff3f9f17301cbb2f90e3cb4fea9c34677cbd47d3465f0fabe987",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
-    },
-    {
-      "file": "planmatch/core/recommendation-adapters.mjs",
-      "source": "apps/api/lib/recommendation-adapters.mts",
-      "declarations": [
-        "maPlanIncludesPartD",
-        "parseCmsMoney",
-        "NULLISH_MONEY"
-      ],
-      "sourceFileSha256": "4cae8e136519cb5a5b9315e56e9b7dcfc0c16708b280ed7fead8ba4b81ccee9a",
-      "publishedFileSha256": "42981461e078fdb4863ebdb97a7b2cf107bb3df402f4a98675a59b67e864bb27",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/ma-provider-facts-service.mjs",
@@ -543,7 +716,7 @@
       ],
       "sourceFileSha256": "4c470384eecfb7c2d1d4399de92321276e35a6778fa9ac464ca788a023fffc4e",
       "publishedFileSha256": "09ee9fc3503febe6182a2734faf5ce60a0fcf67ba891916aae1f8d5ec118f98c",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/ma-benefit-scoring-service.mjs",
@@ -585,7 +758,7 @@
       ],
       "sourceFileSha256": "64edb9d7a5f89da029a15a9a31ce8892bbbdab531bf8f28417b37fac7a95a0f2",
       "publishedFileSha256": "10dfde3479f9783a867f4976c03e88a801b5826fc5fd7990310483fb40d11c81",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/flex-card-shared-pool.mjs",
@@ -598,8 +771,8 @@
         "paddedPlanId"
       ],
       "sourceFileSha256": "187010d3083655950de91e789076e94107dbccf40dc00cdffd9311d88c6c9dfe",
-      "publishedFileSha256": "2c56751d41f7d5724013dc6a9ee051c598747a89a686453a28a092ca756a1275",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained.",
+      "publishedFileSha256": "afa57ad5ed877f448bcfe19a88dd01a8dac4fb23b52392a58275f8052bdfb886",
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter.",
       "adapters": [
         {
           "name": "supplySharedPool",
@@ -608,26 +781,6 @@
           "notes": "Replaces filesystem/catalog loading with an explicit caller-supplied Map. No catalog is bundled; scoring requires supplying one, including an explicitly empty Map for synthetic fixtures. All lookup and benefit decision functions retain their source bodies."
         }
       ]
-    },
-    {
-      "file": "planmatch/core/medicare-constants.mjs",
-      "source": "apps/api/lib/medicare-constants.mts",
-      "declarations": [
-        "currentPlanYear"
-      ],
-      "sourceFileSha256": "690c89cbc0e7edc16f45061ed1ce71afa06794296288edf22cdbcf3f4dbfbe30",
-      "publishedFileSha256": "5551bccc12128c8ce95f67b2e902409d16bfba9837ac3b1feb0b005f12b881ad",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
-    },
-    {
-      "file": "planmatch/core/shared-medicare-constants.mjs",
-      "source": "packages/contracts/src/medicare-constants.ts",
-      "declarations": [
-        "currentPlanYear"
-      ],
-      "sourceFileSha256": "9501bc9d5a9ec4adce1007e4d7cb61491a1feb53ed463afe38adaae8dc6d2870",
-      "publishedFileSha256": "54eb4e884747491ea6cfc12fb94f43293fa400306119bbd1558eb05316da4aa1",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
     },
     {
       "file": "planmatch/core/ma-benefits.mjs",
@@ -683,7 +836,7 @@
       ],
       "sourceFileSha256": "7441c4d309c17441cccaeb9c2630e5c79df2f0bd8f1c7e8f8ace59612ea9a427",
       "publishedFileSha256": "6bdf63f3d53e2daaa2e2a3f418253d885c5c74c16f7bbdaa207942fac0513f2f",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/dental-scoring-constants.mjs",
@@ -704,7 +857,7 @@
       ],
       "sourceFileSha256": "89d07709f30637220a89f3df83b424462495a4eeff6bf4d8286562a574ff81a4",
       "publishedFileSha256": "9956b60c78e08470005f0237e6e3d396026bf2310542c9eb04553b3c6393c3e3",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/vision-scoring-service.mjs",
@@ -718,7 +871,7 @@
       ],
       "sourceFileSha256": "0117f66e741063b8bbd85861209f0ca6e646d31d7112281bd1a36afff9b81585",
       "publishedFileSha256": "fc921c4ee8ef4b1b1668ca7fe66bc1c11f44f9412512bf8981a10bbc5265af7c",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/vision-usage.mjs",
@@ -730,7 +883,7 @@
       ],
       "sourceFileSha256": "5eef7f1a70fb6d059243d37010b22748c92a45c4d13cf8c9624af01427343def",
       "publishedFileSha256": "fbfee77ef699d042d4793ee88a8474b9476a54bb84ad546798b41550672f0595",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/vision-hearing-scoring-constants.mjs",
@@ -770,7 +923,7 @@
       ],
       "sourceFileSha256": "5a84a533d51b0de91840eb9c647988270ac4fba62e7941396fd1c16741287490",
       "publishedFileSha256": "70f8e1cfd30d6b26e2950e12b9d2989ec2b9551307059ccf87c7c8e2cd3b1886",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/vh-benefit-extraction.mjs",
@@ -793,7 +946,7 @@
       ],
       "sourceFileSha256": "8f667be884bc0c4d0f7eec513db12758e4c0804c0ebe24715daefbc297975d4b",
       "publishedFileSha256": "7dbfae9a7b2266c71db76edcb51883882011608259d98cbff184478a2a54c9ef",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/hearing-scoring-service.mjs",
@@ -807,7 +960,7 @@
       ],
       "sourceFileSha256": "c62feaa98bea9319293eb6bf18b1af553c94bb88c7d80246efc58ed9d107d1cf",
       "publishedFileSha256": "ad09ee4bc1dc96defd0666eba8e7fad93df93b8c54673b2a30619899c2688a67",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/ma-pharmacy-scoring-service.mjs",
@@ -817,7 +970,7 @@
       ],
       "sourceFileSha256": "28006cb74e03f1e29890bebdd6935efd4a6f11eebfc17ec027067733e4c165f1",
       "publishedFileSha256": "b80ec5b60eb90161f121931c4e2d7a0f299c822d5b8164d35950d07013bdfff0",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter."
     },
     {
       "file": "planmatch/core/candidate-eligibility.mjs",
@@ -829,8 +982,8 @@
         "CSNP_DROPPED_TRACE_CAP"
       ],
       "sourceFileSha256": "8a1a9e0e2a2acd75c9236906033931162111fede7830162ff7eb78df654dea75",
-      "publishedFileSha256": "50f1ba51c005186c117ecc6ca1b535c97a177a0416f13c306cacfdf0acfe108d",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained.",
+      "publishedFileSha256": "a43ec6202eaf29f86ce4e7179410da7be774b8fc95907f3cb8ee9e38a6074b74",
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter.",
       "adapters": [
         {
           "name": "filterCandidatePlans",
@@ -849,7 +1002,7 @@
       "declarations": [],
       "sourceFileSha256": "08578dd9f108c99ee20578a30d7a7089fde5a1dbc747d88247b35ee05d0f760e",
       "publishedFileSha256": "b87f84552c5c313269e3dab56d7247f05fce95eb4bebbf7a9a63c821b30eb00e",
-      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained.",
+      "changes": "TypeScript annotations and comments removed; local imports redirected to the published modules; selected runtime declarations exported with function bodies retained. Sentry breadcrumb calls, when present, use the documented no-op telemetry adapter.",
       "adapters": [
         {
           "name": "calculateBaseScore",
@@ -860,6 +1013,23 @@
           "notes": "Original numeric scoring statements retained inside a new parameterized wrapper. Drug, provider, benefit and pharmacy helpers are published separately; already-computed signals enter this wrapper. Original environment-based bonus settings remain in use."
         }
       ]
+    }
+  ],
+  "standaloneAdapters": [
+    {
+      "file": "shared/telemetry.mjs",
+      "changes": "Replaces @sentry/node breadcrumb collection with a no-op. Existing calculation and normalization call sites are retained; nothing is collected or sent.",
+      "publishedFileSha256": "f8beca69d0ecbffdbc2afdde53bea33ead788cc40e2ca892a9f4f347fbff8649"
+    },
+    {
+      "file": "data-pipeline/process-dataset.mjs",
+      "changes": "New local-file orchestration calling the original transformations, using supplied CSV text and explicit format. Header-record assembly and error reporting are standalone adapters, not copied ingestion orchestration.",
+      "publishedFileSha256": "8dab12524a4f33354847093badf3071966da840687c3f471ddb268da1ac4024f"
+    },
+    {
+      "file": "data-pipeline/cli.mjs",
+      "changes": "New CLI that reads a supplied local CSV file and writes JSON to stdout. No downloads or database operations.",
+      "publishedFileSha256": "cb8afbb012c24c53aca58bdab09bee2a0e812468176b390974ad943f833a9fb8"
     }
   ]
 }

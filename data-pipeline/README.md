@@ -1,28 +1,55 @@
-# Data pipeline examples
+# Data pipeline
 
-These functions show two data-processing steps from the application source at the version recorded in [the source manifest](../source-manifest.json). They are independent examples: the CSV parser's output is not the input to the drug-response normalizer.
-
-| Function | Role | Example |
-| --- | --- | --- |
-| [`parseCsvLine`](formulary-csv.mjs) | Splits one CSV record into string fields, preserving quoted commas, escaped quotes, empty fields, and leading zeroes. Extracted from the formulary loader. | `"000123","sample, value",` becomes `['000123', 'sample, value', '']`. |
-| [`normalizeDrugGenericFlag`](drug-normalization.mts) | Converts known generic/brand flag representations to `true` or `false`; unknown values become `null`. | `'generic'` becomes `true`; `'brand'` becomes `false`; `'unknown'` becomes `null`. |
-| [`normalizeDrugSearchResponseV2` / `V3`](drug-normalization.mts) | Normalizes drug lists for the API response. V3 also supplies defaults for missing drug metadata. | A missing sibling list becomes `[]`; missing ingredient metadata becomes `null`. |
-
-Run the invented examples from the repository root:
+The application's data transformation and validation functions, extracted into runnable JavaScript. Start with [index.mjs](index.mjs) or the [synthetic example](../examples/data-pipeline.mjs).
 
 ```sh
 npm run demo:pipeline
-npm test
+node data-pipeline/cli.mjs ma-landscape path/to/landscape.csv 2026
+node data-pipeline/cli.mjs nadac path/to/prices.csv
 ```
 
-## Where these fit
+The CLI reads a supplied local file and writes JSON to standard output. It does not download data or write a database. Other supported formats are `mfp`, `pdp-plans`, `formulary`, `beneficiary-costs`, and `nppes`.
 
-The formulary loader reads a source file, parses each row, maps named fields, and writes batches. This folder exposes its row parser. The drug-response normalizer acts later, when the API prepares drug-search results for the website.
+## Processing stages
 
-The full import process also includes source selection, download and validation, plan-year handling, storage, joins, and refresh operations. Those parts are not included here. Provider-directory fetching and matching are also outside this folder's scope.
+| Input | Original processing logic | Output |
+| --- | --- | --- |
+| CMS MA landscape CSV | [Landscape staging](core/load-ma-landscape.mjs): named-header mapping, plan-year validation, key checks, and duplicate handling. | Records with staging counts. Wrong year, malformed keys, conflicting duplicates, and zero accepted rows halt processing. Short rows are counted and skipped. |
+| PDP plan and formulary rows | [Recommendation adapters](core/recommendation-adapters.mjs): identifiers, plan metadata, formulary tiers, and restriction flags. | Normalized rows and rejected-row reasons. |
+| Beneficiary cost rows | [Cost-term adapter](core/recommendation-adapters.mjs): cost types, amounts, and deductible flags. | Terms accepted by the cost calculator. These are not full storage rows; the original function does not return source identifiers. |
+| NADAC price CSV | [NADAC transformation](core/load-nadac-prices.mjs): identifiers, unit prices, dates, and classification. | Price rows and skipped-row reasons. |
+| MFP price CSV | [MFP processing](core/load-mfp-prices.mjs): NDC-11/NDC-9 identifiers, effective dates, prices, duplicate resolution, and validation. | Deduplicated rows and collision details; parsing or validation problems halt the runner. |
+| NPPES provider CSV | [Provider transformation](core/load-nppes.mjs): practice-location address, primary taxonomy, and record lifecycle. | Normal, deactivation, and reactivation records; invalid rows are reported. This does not establish plan-network participation. |
+| Drug-search responses | [Drug normalization](drug-normalization.mts): generic/brand flags and missing metadata. | Normalized API-shaped responses. This is a later response-processing stage, separate from file ingestion. |
 
-## Input assumptions
+For example:
 
-The CSV function processes one line at a time; it is not a general multiline CSV parser and does not reject malformed quoting. Drug-response functions expect the application's upstream response shape and preserve extra fields. They are not validators or tools for removing sensitive data. The examples contain only invented inputs.
+```js
+import { processDataset, adaptMaLandscapePlanRows } from './data-pipeline/index.mjs';
 
-The original function logic is retained. The parser has an export added so it can be run independently. Database connections, credentials, operational paths, and internal comments are excluded.
+const staged = processDataset({ format: 'ma-landscape', text: csvText, planYear: 2026 });
+const normalized = adaptMaLandscapePlanRows(staged.records);
+// Inspect staged.stats and normalized.rejected before using normalized.rows.
+```
+
+The [example](../examples/data-pipeline.mjs) also passes a normalized beneficiary cost row and a transformed NADAC unit price into the real drug-cost calculator. It demonstrates the interface using an explicit synthetic pairing; it does not pretend to perform the application's lookup joins.
+
+## Validation and input assumptions
+
+MFP's default family expectations and price limits are retained from the source snapshot. For a deliberately different fixture, `processDataset` accepts `expectedDrugFamilies`; the example supplies an explicitly synthetic expectation. Updating real release expectations requires reviewing the source file, not disabling the check.
+
+The source also exposes `checkLandscapeSize`, `pickBestCrosswalk`, and `buildRemovedMarkerRows`. Those require prior counts or records supplied by the caller; the CLI does not query prior database state or perform production refresh operations. Do not apply removed markers to a store without validating a complete replacement release.
+
+Several source behaviors matter when reusing these functions:
+
+- Landscape CSV parsing supports quoted newlines and a BOM. The NADAC, MFP, and original formulary line parsers assume one record per line. These parsers do not fully validate malformed CSV quoting.
+- The NADAC date helper checks date shape and basic day/month ranges; it is not a complete calendar validator. Its numeric check also does not reject a negative unit price. These behaviors are retained, not silently repaired in this export.
+- Recommendation adapters preserve source defaults: missing PDP premiums become `'0'`, and unrecognized yes/no values become `'N'`. Inspect the source before treating a default as verified information.
+- NPPES transformation expects the source's 330-column layout and fixed positions. Its checks do not make an arbitrary file or future layout compatible.
+- Whole-file staging and the standalone runner hold data in memory. This is not the application's streaming/batched loading system.
+
+## Extraction boundaries
+
+The functions in `core/` retain their application runtime bodies. Imports and exports are adapted for this repository; breadcrumb telemetry is replaced with [a no-op](../shared/telemetry.mjs). The formulary parser and response normalizers retain their previously published bodies. Source paths, declarations, hashes, and adaptations are recorded in [the manifest](../source-manifest.json).
+
+[process-dataset.mjs](process-dataset.mjs) and [cli.mjs](cli.mjs) are new standalone orchestration. They expose the processing core without bundling source discovery, downloads, credentials, database schemas and writes, operational scheduling, provider-network crawling, licensed datasets, or the complete enrichment/join process. No placeholder service endpoints are used.

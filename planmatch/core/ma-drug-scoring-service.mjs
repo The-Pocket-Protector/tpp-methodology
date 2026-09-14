@@ -4,7 +4,7 @@ import { formatDrugDisplayName } from './drug-display-format.mjs';
 import { computeOffFormularyRetail } from './off-formulary-pricing.mjs';
 import { buildGenericSuggestion } from './generic-substitution.mjs';
 import { normalizeDrugDetail } from './drug-detail-contract.mjs';
-import { maPlanIncludesPartD } from './recommendation-adapters.mjs';
+import { maPlanIncludesPartD } from '../../data-pipeline/core/recommendation-adapters.mjs';
 export const roundCents = (n) => Math.round(n * 100) / 100;
 export const UNKNOWN_COST_SHARE = Object.freeze({
     cost_type: null,

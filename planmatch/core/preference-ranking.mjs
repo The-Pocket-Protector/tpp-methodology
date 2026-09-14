@@ -1,13 +1,13 @@
-import { getEffectiveMonthlyPremiumValue } from './ma-plan-value.mjs';
-import { getNetPlanAnnualCostAfterGivebackValue } from './ma-plan-value.mjs';
-import { getNetAnnualExposureAfterGivebackValue } from './ma-plan-value.mjs';
+import { getEffectiveMonthlyPremiumValue } from '../../cost-calculator/core/ma-plan-value.mjs';
+import { getNetPlanAnnualCostAfterGivebackValue } from '../../cost-calculator/core/ma-plan-value.mjs';
+import { getNetAnnualExposureAfterGivebackValue } from '../../cost-calculator/core/ma-plan-value.mjs';
 import { isProviderCoverageWeightEnabled } from './provider-coverage-weight-flag.mjs';
-import { roundMoney } from './ma-plan-value.mjs';
-import { getMonthlyPremiumValue } from './ma-plan-value.mjs';
-import { getPlanAnnualCostValue } from './ma-plan-value.mjs';
-import { getPartBGivebackValue } from './ma-plan-value.mjs';
+import { roundMoney } from '../../cost-calculator/core/ma-plan-value.mjs';
+import { getMonthlyPremiumValue } from '../../cost-calculator/core/ma-plan-value.mjs';
+import { getPlanAnnualCostValue } from '../../cost-calculator/core/ma-plan-value.mjs';
+import { getPartBGivebackValue } from '../../cost-calculator/core/ma-plan-value.mjs';
 import { isEmployerCostComparisonEnabled } from './employer-cost-comparison-flag.mjs';
-import { getAnnualCostValue } from './ma-plan-value.mjs';
+import { getAnnualCostValue } from '../../cost-calculator/core/ma-plan-value.mjs';
 export const NETWORK_FREEDOM_PLAN_TYPE_BOOST = 25;
 export const COST_SIGNAL_WEIGHTS = {
     default: {
