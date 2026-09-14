@@ -1,7 +1,7 @@
 {
   "snapshot": "be6eb913f78030ce1bdcd7c5e980412d6a2799e6",
   "reviewedOn": "2026-09-14",
-  "scope": "Selected source functions; not the complete recommendation engine or a verification of the deployed website.",
+  "scope": "Selected calculation and data-processing functions; not the complete data pipeline, recommendation engine, or verification of the deployed website.",
   "modules": [
     {
       "file": "src/pharmacy-ranking.mts",
@@ -29,7 +29,7 @@
       ],
       "sourceFileSha256": "1b672e86f124179ad60908015bbaaec144cde150098a61b1760d6600c0dc8285",
       "publishedFileSha256": "3f14a82a1511f5e7629e717613f8aad1f8d17b4c36260abbe4325a8813e8bc73",
-      "changes": "Selected declarations retained; comments and unrelated declarations removed; only the pharmacy type import points to local aliases."
+      "changes": "Selected declarations retained; comments and unrelated declarations removed; function logic unchanged."
     },
     {
       "file": "src/premium-values.mts",
@@ -46,7 +46,31 @@
       ],
       "sourceFileSha256": "43eb859c9561ec864caa059b3812ab0009a8f993ab302700ba5c79620cdf677e",
       "publishedFileSha256": "c75cde6483442e2cb2ee06a2b481a664ba8f800d110c276451bc9aa40e9deb6c",
-      "changes": "Selected declarations retained; comments and unrelated declarations removed; only the pharmacy type import points to local aliases."
+      "changes": "Selected declarations retained; comments and unrelated declarations removed; function logic unchanged."
+    },
+    {
+      "source": "apps/api/scripts/load-formulary.js",
+      "file": "data-pipeline/formulary-csv.mjs",
+      "declarations": [
+        "parseCsvLine"
+      ],
+      "changes": "Selected parser declaration retained with an export added; comments and unrelated loader, database, and command-line code excluded.",
+      "sourceFileSha256": "115da7ac3340f0c40ff1c0dfe5c6797b69001357049476162adabb1fe6ec04cf",
+      "publishedFileSha256": "977ef84476651839fa705c5d46600eb9b4c2ac39db2088e09b685850d35747c0"
+    },
+    {
+      "source": "apps/api/lib/drug-normalization.mts",
+      "file": "data-pipeline/drug-normalization.mts",
+      "declarations": [
+        "RawDrugRow",
+        "RawDrugSearchResponse",
+        "normalizeDrugGenericFlag",
+        "normalizeDrugSearchResponseV2",
+        "normalizeDrugSearchResponseV3"
+      ],
+      "changes": "All declarations retained with their original logic; internal comments removed.",
+      "sourceFileSha256": "0f56d070ddbfa1c45b4bc785093c9475b65d916bfa321cf1e216049d24751f25",
+      "publishedFileSha256": "d814445d551b353f160647c3e04ff615ccf858c7422d8f391a780cdcb3b1d406"
     }
   ]
 }

@@ -1,6 +1,6 @@
 # The Pocket Protector Methodology
 
-A small collection of calculation functions extracted from The Pocket Protector's TypeScript source. Each example has a stated scope, synthetic inputs, and tests you can inspect.
+A small collection of calculation and data-processing functions extracted from The Pocket Protector's JavaScript and TypeScript source. Each example has a stated scope, synthetic inputs, and tests you can inspect.
 
 This is a draft for review. It is not the complete recommendation engine, and it does not establish which version or configuration is deployed on the website.
 
@@ -8,6 +8,7 @@ This is a draft for review. It is not the complete recommendation engine, and it
 
 | Module | What it does | What it does not do |
 | --- | --- | --- |
+| [Data pipeline](data-pipeline/) | Parses individual formulary CSV rows and normalizes drug-search responses, including generic/brand flags and missing metadata. | Download source files, import a database, join plan/formulary/provider datasets, or reproduce the complete ingestion process. |
 | [Pharmacy ranking](src/pharmacy-ranking.mts) | Orders already-prepared plans by pharmacy data availability, doctor coverage, covered drug count, then estimated annual cost. | Retrieve plan data, verify a provider network, calculate drug prices, or reproduce the separate Medicare Advantage recommendation flow. |
 | [Preference weights](src/preference-weights.mts) | Normalizes four non-care preference weights; uses the source defaults when inputs total zero. | Set the final ranking on its own; care coverage and other ranking decisions happen elsewhere. |
 | [Premium values](src/premium-values.mts) | Reads monthly plan premiums and Part B giveback values, and subtracts giveback from the plan premium. | Calculate a member's complete cost of coverage, including Part B premiums, drug costs, medical care, eligibility, or enrollment timing. |
@@ -20,10 +21,11 @@ Use Node.js 22.18 or newer. No Python, package installation, credentials, or dat
 
 ```sh
 npm run demo
+npm run demo:pipeline
 npm test
 ```
 
-The sample plans and amounts are invented. They are not quotes, recommendations, or real member records. The tests cover meaningful ordering, missing-cost handling, stable ties, non-mutation, and the behavior of the selected premium and weighting functions.
+The sample plans, drug rows, identifiers, and amounts are invented. They are not quotes, recommendations, or real member records. The tests cover CSV quoting and identifier preservation, drug normalization, meaningful ordering, missing-cost handling, stable ties, non-mutation, and the selected premium and weighting functions.
 
 ## Why publishing functions helps
 

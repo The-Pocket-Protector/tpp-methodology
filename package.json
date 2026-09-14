@@ -3,12 +3,13 @@
   "version": "0.1.0",
   "private": true,
   "type": "module",
-  "description": "Selected TPP calculation functions with synthetic examples and explicit scope.",
+  "description": "Selected TPP calculation and data-processing functions with synthetic examples and explicit scope.",
   "engines": {
     "node": ">=22.18.0"
   },
   "scripts": {
     "test": "node --test test/*.test.mjs",
-    "demo": "node examples/demo.mjs"
+    "demo": "node examples/demo.mjs",
+    "demo:pipeline": "node examples/data-pipeline.mjs"
   }
 }
