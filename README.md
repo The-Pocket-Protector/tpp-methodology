@@ -1,13 +1,14 @@
 # The Pocket Protector Methodology
 
-A small collection of calculation and data-processing functions extracted from The Pocket Protector's JavaScript and TypeScript source. Each example has a stated scope, synthetic inputs, and tests you can inspect.
+A collection of PlanMatch decision rules and data-processing functions extracted from The Pocket Protector's JavaScript and TypeScript source. Each example has a stated scope, synthetic inputs, and tests you can inspect.
 
-This is a draft for review. It is not the complete recommendation engine, and it does not establish which version or configuration is deployed on the website.
+This is a private draft for review. It includes PlanMatch's core decision rules and their supporting calculations. It does not include the complete application or live data services, and it does not establish the website's deployed configuration.
 
 ## What you can inspect
 
 | Module | What it does | What it does not do |
 | --- | --- | --- |
+| [PlanMatch algorithm](planmatch/) | Includes candidate eligibility rules, doctor/drug evaluation, benefit and pharmacy scoring, base and preference ranking, care filtering, and the cost-ranking/stay-or-switch model. | Fetch live data, run the complete API, or independently reproduce a website result without its data and configuration. |
 | [Data pipeline](data-pipeline/) | Parses individual formulary CSV rows and normalizes drug-search responses, including generic/brand flags and missing metadata. | Download source files, import a database, join plan/formulary/provider datasets, or reproduce the complete ingestion process. |
 | [Pharmacy ranking](src/pharmacy-ranking.mts) | Orders already-prepared plans by pharmacy data availability, doctor coverage, covered drug count, then estimated annual cost. | Retrieve plan data, verify a provider network, calculate drug prices, or reproduce the separate Medicare Advantage recommendation flow. |
 | [Preference weights](src/preference-weights.mts) | Normalizes four non-care preference weights; uses the source defaults when inputs total zero. | Set the final ranking on its own; care coverage and other ranking decisions happen elsewhere. |
@@ -22,6 +23,7 @@ Use Node.js 22.18 or newer. No Python, package installation, credentials, or dat
 ```sh
 npm run demo
 npm run demo:pipeline
+npm run demo:planmatch
 npm test
 ```
 
@@ -33,7 +35,7 @@ You can inspect the inputs the functions read, run the examples, and challenge t
 
 ## Relationship to the website
 
-[source-manifest.json](source-manifest.json) records the source version, file hashes, and extracted declarations. The function logic is retained; unrelated declarations and internal comments are excluded. The pharmacy types are copied from the shared contract into local aliases so this package has no private imports.
+[source-manifest.json](source-manifest.json) records the source version, file hashes, extracted declarations, and adapters. Function logic is retained; unrelated declarations and internal comments are excluded. PlanMatch's TypeScript annotations are removed to produce runnable JavaScript. Its candidate/base-score wrappers and catalog input are documented in the [extraction boundaries](planmatch/README.md#extraction-boundaries). The pharmacy types are copied from the shared contract into local aliases so this package has no private imports.
 
 Before a website page describes these functions as the code behind its results, the source owner must verify the deployed version and the complete calculation path. The website should link to the specific release and describe the published scope accurately.
 

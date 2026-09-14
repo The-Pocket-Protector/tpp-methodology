@@ -1,7 +1,7 @@
 {
   "snapshot": "be6eb913f78030ce1bdcd7c5e980412d6a2799e6",
   "reviewedOn": "2026-09-14",
-  "scope": "Selected calculation and data-processing functions; not the complete data pipeline, recommendation engine, or verification of the deployed website.",
+  "scope": "PlanMatch core decision rules and selected data-processing functions, with explicit adapters for prepared data; excludes the full API, live datasets, and deployed configuration.",
   "modules": [
     {
       "file": "src/pharmacy-ranking.mts",
@@ -71,6 +71,795 @@
       "changes": "All declarations retained with their original logic; internal comments removed.",
       "sourceFileSha256": "0f56d070ddbfa1c45b4bc785093c9475b65d916bfa321cf1e216049d24751f25",
       "publishedFileSha256": "d814445d551b353f160647c3e04ff615ccf858c7422d8f391a780cdcb3b1d406"
+    },
+    {
+      "file": "planmatch/core/ranking.mjs",
+      "source": "apps/api/services/recommendations/ma-proposed-ranking-service.mts",
+      "declarations": [
+        "scorePlanProposed",
+        "num",
+        "visitCostAnnual",
+        "VISIT_COUNT_DEFAULTS",
+        "recordOf",
+        "lineAmount",
+        "INPATIENT_STAYS_VERY_HIGH",
+        "MOOP_RISK_WEIGHTS",
+        "benefitCharges",
+        "hearingCharge",
+        "HEARING_RETAIL_PAIR_DOLLARS",
+        "HEARING_RETAIL_PAIR_DEFAULT",
+        "visionCharge",
+        "VISION_EXAM_RETAIL_DOLLARS",
+        "VISION_RETAIL_DOLLARS",
+        "VISION_DEFAULT_CADENCE",
+        "VISION_REPLACEMENTS_PER_YEAR",
+        "VISION_RARE_USE_FACTOR",
+        "visionFactsToParsed",
+        "dentalCharge",
+        "DENTAL_SPEND_DOLLARS",
+        "DENTAL_ROUTINE_ANNUAL_DRAW_DOLLARS",
+        "DENTAL_PRICEABLE_MODELS",
+        "dentalEffectiveShareRate",
+        "DENTAL_PROCEDURE_UCR",
+        "DENTAL_PROCEDURE_WEIGHTS",
+        "DENTAL_NO_MAX_COST_SHARE_PLACEHOLDER",
+        "otcCharge",
+        "OTC_ANNUAL_DOLLARS",
+        "SHARED_ALLOWANCE_TOKENS",
+        "coverageCounts",
+        "runProposedRanking",
+        "normalizeLanguageTag",
+        "confirmedDoctorCount",
+        "confirmedDroppedDoctors",
+        "CONFIRMED_OUT_OF_NETWORK_STATUSES",
+        "confirmedDroppedDrugs",
+        "SWITCH_MATERIALITY_DOLLARS",
+        "attachProposedScoring",
+        "proposedRankingMode",
+        "visionChoicesFromProfile",
+        "PROPOSED_RANK_BASIS",
+        "proposedRankingInputsFromBody",
+        "PROPOSED_SCORING_MODEL_VERSION"
+      ],
+      "sourceFileSha256": "094532ada3a88a7c851e080d4f704b6854819a6c4dbc17c257a8087fdda5548b",
+      "publishedFileSha256": "bf14da10a7893ccdeefbfd1ae14bac04b067895c3454c2cd22cb9f9122133a47",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/recommendation-request-normalization.mjs",
+      "source": "apps/api/lib/recommendation-request-normalization.mts",
+      "declarations": [
+        "resolveBenefitIntent",
+        "hasPricedPayload",
+        "normalizeMedicaidProfile",
+        "isRecord",
+        "normalizeMedicaidAnswer",
+        "normalizeMedicaidIntakeAnswer",
+        "normalizeHasMedicaid",
+        "normalizeBooleanish",
+        "normalizeNonCareRankingWeights",
+        "NON_CARE_RANKING_WEIGHT_KEYS",
+        "normalizeRecommendPlanTypes",
+        "isSnpEligibilityPlanType",
+        "normalizeRecommendOfferRx",
+        "normalizeRecommendCsnpConditions",
+        "normalizeStringList",
+        "normalizeRecommendCsnpConditionKeys"
+      ],
+      "sourceFileSha256": "1b672e86f124179ad60908015bbaaec144cde150098a61b1760d6600c0dc8285",
+      "publishedFileSha256": "401eb5be433925bd2887967a61d6778d892f07319687509c8cf7e2cf77fbac48",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/ma-giveback-ranking.mjs",
+      "source": "apps/api/services/recommendations/ma-giveback-ranking.mts",
+      "declarations": [
+        "compareGivebackDesc",
+        "givebackRankingMode",
+        "resolveGivebackRankingCase",
+        "normalizeMilitaryCoverage",
+        "MILITARY_COVERAGE_TOKENS",
+        "VA_MEDICAL",
+        "poolMaxGivebackAnnual",
+        "resolveRankBasis",
+        "buildGivebackRankingAudit",
+        "militaryCoverageFromBody"
+      ],
+      "sourceFileSha256": "7a0656c2a1991288d85472d213fc020644699d0641e6169f5b69f6aa3be2e3a0",
+      "publishedFileSha256": "44699bc5c2f73e1eec9881d0f8df8ad908b22ab6181d0a6bb0b575a54d3c5f53",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/preference-ranking.mjs",
+      "source": "apps/api/recommend/ma-preference-ranking.mts",
+      "declarations": [
+        "rankMaRecommendationsByUserPreferences",
+        "getMaRecommendationValidationIssues",
+        "textValue",
+        "numberValue",
+        "normalizeList",
+        "normalizeBenefitToken",
+        "normalizeToken",
+        "countItems",
+        "isNetworkFreedomHardFilterMatch",
+        "PPO_PLAN_TYPE_VALUES",
+        "getRecommendationHealthProfile",
+        "normalizeUtilization",
+        "normalizeBenefitPreferences",
+        "BENEFIT_PREFERENCE_TOKENS",
+        "COST_SIGNAL_WEIGHTS",
+        "hasAny",
+        "getFinancialPreferenceMode",
+        "getCurrentEmployerMonthlyPremiumValue",
+        "firstNumberValue",
+        "computeSignalStats",
+        "lowNumberScore",
+        "isHighUtilization",
+        "getMoopValue",
+        "getDeductibleValue",
+        "getDrugCostValue",
+        "highNumberScore",
+        "getDrugCoverageRatio",
+        "getBenefitPreferenceScore",
+        "getPlanBenefitEvidence",
+        "planBenefitEvidenceCache",
+        "computePlanBenefitEvidence",
+        "getExplicitBenefitPreferenceScore",
+        "getDoctorNetworkRatio",
+        "hasUnresolvedDoctors",
+        "getProviderScore",
+        "getNetworkFreedomPlanTypeBoost",
+        "NETWORK_FREEDOM_PLAN_TYPE_BOOST",
+        "getReferralBurdenValue",
+        "firstMappedFieldValue",
+        "codedNumberValue",
+        "getPriorAuthBurdenValue",
+        "getSurpriseBillProtectionScore",
+        "getCustomerServiceScore",
+        "matchedPriorityScore",
+        "getEstimatedAnnualSavings",
+        "getPremiumValue",
+        "getCurrentEmployerOopMaxValue",
+        "getCurrentEmployerDeductibleValue",
+        "attachRecommendationBasis",
+        "compareCareFitCoverage",
+        "getDoctorCareCoverageCount",
+        "getDrugCareCoverageCount",
+        "compareDrugEvidenceForDrugConcern",
+        "compareKnownValue",
+        "getDrugEvidenceValue",
+        "compareDoctorEvidenceForDoctorConcern",
+        "compareBenefitPreferenceCoverage",
+        "getMatchedMaBenefitPreferences",
+        "benefitCostGapWithinNormalRange",
+        "valueGapWithinLimit",
+        "compareReferralPreference",
+        "strictBooleanValue",
+        "REFERRAL_FREE_PREMIUM_CEILING_MONTHLY",
+        "compareFinancialPreference",
+        "compareEstimatedAnnualSavings",
+        "compareLowerValue",
+        "compareKnownMoopForHighUtilization",
+        "compareVeryHighMoopPrimary",
+        "VERY_HIGH_SIMILAR_MOOP_GAP",
+        "compareHealthUtilizationMoopGuardrail",
+        "HIGH_MOOP_GAP",
+        "MODERATE_MOOP_GAP",
+        "getSavingsAdvantage",
+        "moopWinsForModerate",
+        "compareSavingsTieBreakers",
+        "compareHigherValue",
+        "compareRiskValueTieBreakers",
+        "getKnownBenefitCount",
+        "getStarRatingValue",
+        "compareStablePlanIdentity",
+        "stablePlanIdentity"
+      ],
+      "sourceFileSha256": "dc88bf9c2a380380ad6b11aed53c4b92e7e7c0e7bce5fbb4ca920d1e5d38f631",
+      "publishedFileSha256": "fdb93dbd243b4a0f2e9e53cdf29fe990ea7bf8c8b8afcddf3b7b5c0f710224df",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/ma-plan-value.mjs",
+      "source": "apps/api/recommend/ma-plan-value.mts",
+      "declarations": [
+        "getEffectiveMonthlyPremiumValue",
+        "roundMoney",
+        "getMonthlyPremiumValue",
+        "numberValue",
+        "getPartBGivebackValue",
+        "getNetPlanAnnualCostAfterGivebackValue",
+        "getPlanAnnualCostValue",
+        "getAnnualCostValue",
+        "getEstimatedAnnualDrugCostValue",
+        "getNetAnnualExposureAfterGivebackValue"
+      ],
+      "sourceFileSha256": "43eb859c9561ec864caa059b3812ab0009a8f993ab302700ba5c79620cdf677e",
+      "publishedFileSha256": "4692796cbe5b47dd4a453609bad8efbe9fafa2e287c67122e652efce42445cf3",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/provider-coverage-weight-flag.mjs",
+      "source": "apps/api/lib/provider-coverage-weight-flag.mts",
+      "declarations": [
+        "isProviderCoverageWeightEnabled"
+      ],
+      "sourceFileSha256": "2d72a319de78f195e58bfd7e3f779140f29e48643126ab6d12d30021aa5d7b8a",
+      "publishedFileSha256": "bfb43a315c74489f0b551e00e4a789d337a26580fb1d64cd81714fa9b830b1f3",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/employer-cost-comparison-flag.mjs",
+      "source": "apps/api/lib/employer-cost-comparison-flag.mts",
+      "declarations": [
+        "isEmployerCostComparisonEnabled"
+      ],
+      "sourceFileSha256": "05b3f2ea0a7c985c7b0552151f111546571f0e9a4b7a6a7248302007e485e3a0",
+      "publishedFileSha256": "eb8daf6603928592ec77ed3e1100ab917032fc21bd6cfbf909c708ff73afcebc",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/care-coverage.mjs",
+      "source": "apps/api/lib/recommendation-care-tiering.mts",
+      "declarations": [
+        "selectCareMatchTier",
+        "coveredDoctorCount",
+        "confirmedDoctorCount",
+        "buildCareMatchMessage",
+        "doctorCoverageStatus"
+      ],
+      "sourceFileSha256": "95f8f03a73580d105e87c029ffaedcf7e82274d77a9dcb46a89788c876978a94",
+      "publishedFileSha256": "212ec972c4ed34b3e7bb4a2aeceb8982e75106f84ccc357570ae9d51f5d9226f",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/provider-network-policy.mjs",
+      "source": "apps/api/recommend-network-policy.mts",
+      "declarations": [
+        "parseProviderNetworkPolicy",
+        "SCORE_POLICY",
+        "STRICT_ALL_IN_NETWORK_POLICY",
+        "filterPlansForProviderNetworkPolicy",
+        "numberValue",
+        "isStrictAllInNetworkPlan"
+      ],
+      "sourceFileSha256": "09658c0183deb4ab25ec3c2dffacabe481b796d833aad44f36c9453053532734",
+      "publishedFileSha256": "25f0648175f6f159fdc286f9e3c06f20d563546acc37996723b9f9d3dc7ba7bf",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/preference-inputs.mjs",
+      "source": "apps/api/recommend/weights.mts",
+      "declarations": [
+        "normalizeRecommendPriorities",
+        "buildDefaultRecommendWeights",
+        "applyWeightDimension",
+        "normalizeWeightsToHundred"
+      ],
+      "sourceFileSha256": "74f2ed33b71307c19a08bfeac829801ac969a5beeb78a6ea6123b179a7e2b06c",
+      "publishedFileSha256": "d3366ab06940fb363bbf459c31b98e7e934e67341d2234f52f2d48ae75c01b47",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/shared.mjs",
+      "source": "apps/api/recommend/shared.mts",
+      "declarations": [
+        "hasOwn",
+        "isPlainObject"
+      ],
+      "sourceFileSha256": "31a46b74cc2835b7b3a9c70d99f2692bceda44cf911d3656b7a0fc1e76c73e01",
+      "publishedFileSha256": "67edd380aa20e5525e4d8402342e4321729c91605f1ed3bbc221a53c7fce2192",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/priorities.mjs",
+      "source": "apps/api/recommend/priorities.mts",
+      "declarations": [
+        "normalizePriorityToken",
+        "RECOMMEND_BENEFIT_PREFERENCES",
+        "mapPriorityKeyToWeightDimension",
+        "isLegacyCarePriorityKey",
+        "LEGACY_CARE_PRIORITY_TOKENS",
+        "RECOMMEND_WEIGHT_DIMENSIONS"
+      ],
+      "sourceFileSha256": "ae441118f8a8dfded8594b2634a6789204fb038bc1d0f33e5ca8201a05c259a9",
+      "publishedFileSha256": "390a376e1d94c8f7487fdcc2e862473d0a36cdf2ca0841a07f0ba8e811a70e7e",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/csnp-condition-match.mjs",
+      "source": "apps/api/lib/csnp-condition-match.mts",
+      "declarations": [
+        "decodeSnpConditionRow",
+        "filedConditionsFromBitmask",
+        "BITMASK_PATTERN",
+        "KEY_ORDER",
+        "CSNP_BITMASK_POSITIONS",
+        "BIT",
+        "ESRD_INCLUDES_KIDNEY_TRANSPLANT_BIT_29",
+        "canonical",
+        "filedConditionsFromBooleans",
+        "truthy",
+        "resolveRequestedCsnpKeys",
+        "isCsnpConditionKey",
+        "KEY_SET",
+        "normalizeCsnpLabel",
+        "KEY_BY_NORMALIZED_LABEL",
+        "CSNP_CONDITION_LABELS",
+        "isCsnpPlan",
+        "normalizeSnpSegmentId",
+        "decideCsnpAdmission"
+      ],
+      "sourceFileSha256": "d6ba28d242d945c4b227170bd1248f57e8a2f7c1ac7f8aafa05e83f8e79c26a6",
+      "publishedFileSha256": "a30513e69029b3f5234cf42d48d157d3b3b1b39fd835db4c3e9dab28cf33ba08",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/shared-recommendation-constants.mjs",
+      "source": "packages/contracts/src/recommend.ts",
+      "declarations": [
+        "CSNP_CONDITION_KEYS"
+      ],
+      "sourceFileSha256": "035989f847878c1d959a49f446290ddc802db809a5da47a4e14f06cd35396bd7",
+      "publishedFileSha256": "8a282d0d5100613617d0f31a010d839e8773a12920445333042f45e913594b8d",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/ma-drug-scoring-service.mjs",
+      "source": "apps/api/services/recommendations/ma-drug-scoring-service.mts",
+      "declarations": [
+        "scoreDrugCoverage",
+        "priceUncoveredDrugs",
+        "UNKNOWN_COST_SHARE",
+        "roundCents"
+      ],
+      "sourceFileSha256": "16937aa1dfbaa338cc420cfdc349d3df6058437e0dbd1f7428ef0181121ef6e5",
+      "publishedFileSha256": "c1114bd38ccc833dc487a642840c0583f3df2e8cd7eb9654551bccd9c2d8df43",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/ma-drug-classification.mjs",
+      "source": "apps/api/lib/ma-drug-classification.mts",
+      "declarations": [
+        "prescriptionComparisonExclusion"
+      ],
+      "sourceFileSha256": "f084dd955d92695ffe8c005e990078cdedb31f06e17fa976c6a61291615070ac",
+      "publishedFileSha256": "850d33c7cccf3bc0510a87aa28a2feafab58f6bc6945dc8071e6482581530e89",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/drug-detail-contract.mjs",
+      "source": "apps/api/drug-detail-contract.mts",
+      "declarations": [
+        "normalizeDrugDetails",
+        "normalizeDrugDetail",
+        "normalizeNullableTier",
+        "normalizeNullableNumber",
+        "monthlyFromAnnual",
+        "inferCovered",
+        "normalizeOptionalBoolean"
+      ],
+      "sourceFileSha256": "912708f5cc202f8bc05c509fdd8482b1b0c79e63bc41cd8f941bf58539f74ec2",
+      "publishedFileSha256": "caea732f3433960a920d98a1821d817ef66ccce83e90107b53d0dc3ddc245c12",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/drug-display-format.mjs",
+      "source": "apps/api/lib/drug-display-format.mts",
+      "declarations": [
+        "formatDrugDisplayName",
+        "PACK_CONTAINER_RE",
+        "derivePackDisplayName",
+        "PACK_GROUP_RE",
+        "extractPackIngredient",
+        "LEADING_VOLUME_RE",
+        "INGREDIENT_BEFORE_DOSE_RE",
+        "titleCasePhrase",
+        "titleCaseWord",
+        "LEADING_HR_PREFIX_RE",
+        "foldAsSaltPrefix",
+        "AS_PREFIX_FOLD_RE",
+        "PARENTHETICAL_DISQUALIFIER_RE",
+        "UNIT_AFTER_NUMBER_RE",
+        "UNIT_AFTER_SLASH_RE",
+        "ORAL_BEFORE_FORM_RE",
+        "FORM_WORDS",
+        "tryCollapseNIngredientCombo",
+        "DOSE_TUPLE_RE",
+        "TRAILING_FORM_RE",
+        "FIRST_DIGIT_RE"
+      ],
+      "sourceFileSha256": "44fa388c85dc16c6e5037ab014dcb1922d07f527d73048cffb6f5fb2d3c25839",
+      "publishedFileSha256": "8c232e9ae9e82ee54711f8201dd792972a7108c0c74e9ba712f9f8e0ecb90f5c",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/drug-dosage.mjs",
+      "source": "apps/api/lib/drug-dosage.mts",
+      "declarations": [
+        "sumDoseTokens"
+      ],
+      "sourceFileSha256": "581824d232b2a5c18541eee771f319dd7eca54b07ec33ce860dd0a6e303b9bb7",
+      "publishedFileSha256": "fba8ba14fe5b90a42aada9a5fafa75b4a60ef7d07e05fd47e88d85e529fc8f85",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/off-formulary-pricing.mjs",
+      "source": "apps/api/lib/off-formulary-pricing.mts",
+      "declarations": [
+        "computeOffFormularyRetail",
+        "marginFor",
+        "isGenericDrug",
+        "OFF_FORMULARY_RETAIL",
+        "roundCents"
+      ],
+      "sourceFileSha256": "87b6f234a5fb9a1482d287c6ed3c2a8f789ac56c690a6ba5c48fe3c6575d6a76",
+      "publishedFileSha256": "701413b31c9f77f8eee3d86d4c03ef1fe09225317b9f274cce74e8808cb9166e",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/oop-estimator.mjs",
+      "source": "apps/api/lib/oop-estimator.mts",
+      "declarations": [
+        "resolveFillsPerYear",
+        "DEFAULT_FILLS_BY_DAYS_SUPPLY"
+      ],
+      "sourceFileSha256": "19c25133462863255e05c974c7410cc6db4839d261d68d38cf9cb6837d8c9b96",
+      "publishedFileSha256": "4d83d3499cc923150008ab8b55914eefcdf5b490a00e4ba5744068f6ff7df835",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/generic-substitution.mjs",
+      "source": "apps/api/lib/generic-substitution.mts",
+      "declarations": [
+        "buildGenericSuggestion",
+        "SUGGESTION_REASON",
+        "toFiniteOrNull"
+      ],
+      "sourceFileSha256": "665513463c87063105accec360e49c4b6536f4fdc558b5d43c96b5a3385cee07",
+      "publishedFileSha256": "754a33fd49ffff3f9f17301cbb2f90e3cb4fea9c34677cbd47d3465f0fabe987",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/recommendation-adapters.mjs",
+      "source": "apps/api/lib/recommendation-adapters.mts",
+      "declarations": [
+        "maPlanIncludesPartD",
+        "parseCmsMoney",
+        "NULLISH_MONEY"
+      ],
+      "sourceFileSha256": "4cae8e136519cb5a5b9315e56e9b7dcfc0c16708b280ed7fead8ba4b81ccee9a",
+      "publishedFileSha256": "42981461e078fdb4863ebdb97a7b2cf107bb3df402f4a98675a59b67e864bb27",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/ma-provider-facts-service.mjs",
+      "source": "apps/api/services/recommendations/ma-provider-facts-service.mts",
+      "declarations": [
+        "buildProviderFacts",
+        "isCoveredViaCrossReference",
+        "providerCoverageWeight",
+        "computeProviderCoverageScore"
+      ],
+      "sourceFileSha256": "4c470384eecfb7c2d1d4399de92321276e35a6778fa9ac464ca788a023fffc4e",
+      "publishedFileSha256": "09ee9fc3503febe6182a2734faf5ce60a0fcf67ba891916aae1f8d5ec118f98c",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/ma-benefit-scoring-service.mjs",
+      "source": "apps/api/services/recommendations/ma-benefit-scoring-service.mts",
+      "declarations": [
+        "scoreSupplementalBenefits",
+        "scoreDentalBenefitQuality",
+        "isPreventiveDentalRow",
+        "dentalRowText",
+        "isComprehensiveDentalRow",
+        "emptyDentalResult",
+        "groupByCategoryCode",
+        "normalizeCategoryCode",
+        "detectCostSharingModel",
+        "getCopayAmount",
+        "numberValue",
+        "firstPresentValue",
+        "getCoinsurancePercent",
+        "getMaxBenefitAmount",
+        "hasUnlimitedFlag",
+        "isTruthyValue",
+        "scoreProcedureCost",
+        "estimateOop",
+        "scoreOop",
+        "scoreMaxBenefit",
+        "scoreCoverageBreadth",
+        "scoreAccess",
+        "hasDeductible",
+        "requiresPriorAuth",
+        "hasOonCoverage",
+        "maxVisits",
+        "pickTier",
+        "averageCoinsurancePercent",
+        "computeDentalRealizedValue",
+        "getMaxBenefitAnnualized",
+        "qualityMatchCredit",
+        "QUALITY_SCORED_MATCH_FLOOR",
+        "QUALITY_BONUS_PER_BENEFIT_MAX"
+      ],
+      "sourceFileSha256": "64edb9d7a5f89da029a15a9a31ce8892bbbdab531bf8f28417b37fac7a95a0f2",
+      "publishedFileSha256": "10dfde3479f9783a867f4976c03e88a801b5826fc5fd7990310483fb40d11c81",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/flex-card-shared-pool.mjs",
+      "source": "apps/api/lib/flex-card-shared-pool.mts",
+      "declarations": [
+        "sharedDentalScopeFor",
+        "lookup",
+        "SHARED_POOL",
+        "poolKey",
+        "paddedPlanId"
+      ],
+      "sourceFileSha256": "187010d3083655950de91e789076e94107dbccf40dc00cdffd9311d88c6c9dfe",
+      "publishedFileSha256": "2c56751d41f7d5724013dc6a9ee051c598747a89a686453a28a092ca756a1275",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained.",
+      "adapters": [
+        {
+          "name": "supplySharedPool",
+          "sourceFunction": "loadShippedCatalog",
+          "sourceBlocks": [],
+          "notes": "Replaces filesystem/catalog loading with an explicit caller-supplied Map. No catalog is bundled; scoring requires supplying one, including an explicitly empty Map for synthetic fixtures. All lookup and benefit decision functions retain their source bodies."
+        }
+      ]
+    },
+    {
+      "file": "planmatch/core/medicare-constants.mjs",
+      "source": "apps/api/lib/medicare-constants.mts",
+      "declarations": [
+        "currentPlanYear"
+      ],
+      "sourceFileSha256": "690c89cbc0e7edc16f45061ed1ce71afa06794296288edf22cdbcf3f4dbfbe30",
+      "publishedFileSha256": "5551bccc12128c8ce95f67b2e902409d16bfba9837ac3b1feb0b005f12b881ad",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/shared-medicare-constants.mjs",
+      "source": "packages/contracts/src/medicare-constants.ts",
+      "declarations": [
+        "currentPlanYear"
+      ],
+      "sourceFileSha256": "9501bc9d5a9ec4adce1007e4d7cb61491a1feb53ed463afe38adaae8dc6d2870",
+      "publishedFileSha256": "54eb4e884747491ea6cfc12fb94f43293fa400306119bbd1558eb05316da4aa1",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/ma-benefits.mjs",
+      "source": "apps/api/lib/ma-benefits.mts",
+      "declarations": [
+        "extractSupplementalBenefits",
+        "formatDentalCaps",
+        "formatAllowance",
+        "periodSuffix",
+        "PBP_PERIODICITY_SUFFIXES",
+        "PBP_PERIODICITY_DECODE",
+        "formatDollars",
+        "dentalScopeLabel",
+        "extractDentalCaps",
+        "toArray",
+        "rec",
+        "parseAmount",
+        "buildDentalCap",
+        "dentalPeriodFacts",
+        "PBP_PERIODICITY_MONTHS",
+        "PBP_PERIODICITY_ANNUALIZATION_FACTORS",
+        "combinedSupplementalRows",
+        "parseJsonRecord",
+        "selectedCombinedCodes",
+        "sharedBenefitLabels",
+        "COMBINED_SUPPLEMENTAL_LABELS",
+        "applyAdjudicatedSharing",
+        "sharedPoolLabels",
+        "SHARED_POOL_LABELS",
+        "findFirstAmount",
+        "findComprehensiveDentalMax",
+        "extractDentalCostShareLabel",
+        "hasMeaningfulCoverage",
+        "DENTAL_PREVENTIVE_CODES",
+        "DENTAL_COMPREHENSIVE_CODES",
+        "hasNonzeroDentalCostShare",
+        "parseAmountAllowZero",
+        "sharedAllowanceLanes",
+        "sharedWithSuffix",
+        "extractHearingAidCopayLabel",
+        "extractStandardCopay",
+        "formatCopay",
+        "formatCopayRange",
+        "extractOtcLabel",
+        "hasVbidBenefit",
+        "isVbidEnabled",
+        "getVbidPackages",
+        "selectionIncludes",
+        "extractOtc13bLabel",
+        "extractVisionAllowanceAmount",
+        "hasWorldwideCoverage",
+        "extractAdmWaivedHospitalCopay"
+      ],
+      "sourceFileSha256": "7441c4d309c17441cccaeb9c2630e5c79df2f0bd8f1c7e8f8ace59612ea9a427",
+      "publishedFileSha256": "6bdf63f3d53e2daaa2e2a3f418253d885c5c74c16f7bbdaa207942fac0513f2f",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/dental-scoring-constants.mjs",
+      "source": "apps/api/services/recommendations/dental-scoring-constants.mts",
+      "declarations": [
+        "PROCEDURE_UCR",
+        "CATEGORY",
+        "CATEGORY_WEIGHTS",
+        "OOP_SCORE_THRESHOLDS",
+        "OOP_SCORE_FALLBACK",
+        "TEMPORAL_LIMIT_MAX_SCORE",
+        "MAX_BENEFIT_FALLBACK",
+        "MAX_BENEFIT_THRESHOLDS",
+        "BREADTH_POINTS",
+        "PREVENTIVE_BONUS",
+        "COMPOSITE_WEIGHTS",
+        "REALIZED_VALUE"
+      ],
+      "sourceFileSha256": "89d07709f30637220a89f3df83b424462495a4eeff6bf4d8286562a574ff81a4",
+      "publishedFileSha256": "9956b60c78e08470005f0237e6e3d396026bf2310542c9eb04553b3c6393c3e3",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/vision-scoring-service.mjs",
+      "source": "apps/api/services/recommendations/vision-scoring-service.mts",
+      "declarations": [
+        "scoreVisionBenefitQuality",
+        "deriveAnnualizedEyewearCapacity",
+        "annualizationFactor",
+        "round2",
+        "scoreVisionExam"
+      ],
+      "sourceFileSha256": "0117f66e741063b8bbd85861209f0ca6e646d31d7112281bd1a36afff9b81585",
+      "publishedFileSha256": "fc921c4ee8ef4b1b1668ca7fe66bc1c11f44f9412512bf8981a10bbc5265af7c",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/vision-usage.mjs",
+      "source": "apps/api/lib/vision-usage.mts",
+      "declarations": [
+        "visionEyewearAnnualValue",
+        "visionEyewearClaimRate",
+        "VISION_REPLACEMENTS_PER_YEAR"
+      ],
+      "sourceFileSha256": "5eef7f1a70fb6d059243d37010b22748c92a45c4d13cf8c9624af01427343def",
+      "publishedFileSha256": "fbfee77ef699d042d4793ee88a8474b9476a54bb84ad546798b41550672f0595",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/vision-hearing-scoring-constants.mjs",
+      "source": "apps/api/services/recommendations/vision-hearing-scoring-constants.mts",
+      "declarations": [
+        "VISION_WEIGHTS_PROGRESSIVE",
+        "VISION_WEIGHTS",
+        "interpolateCurve",
+        "VISION_EYEWEAR_CURVE",
+        "VISION_BOTH_EYEWEAR_MULTIPLIER",
+        "VISION_EXAM_NEUTRAL",
+        "VISION_EXAM_COINS_WORST_PCT",
+        "VISION_EXAM_WORST",
+        "VISION_EXAM_BANDS",
+        "VISION_RICHNESS",
+        "VISION_ACCESS",
+        "ladderPoints",
+        "VISION_PREFERENCE_LADDER",
+        "VISION_PREFERENCE_FLOOR",
+        "HEARING_COPAY_TIER_WORST",
+        "HEARING_COPAY_TIER_BANDS",
+        "HEARING_CEILING_MODIFIER",
+        "HEARING_WEIGHTS",
+        "HEARING_ALLOWANCE_CURVE",
+        "HEARING_VENDOR_NO_PRICE_AID",
+        "HEARING_UNSPECIFIED_AID",
+        "HEARING_EXTRAS_NEUTRAL",
+        "HEARING_EXTRAS_POINTS",
+        "HEARING_CADENCE_POINTS",
+        "HEARING_CADENCE_NEUTRAL",
+        "HEARING_EXAM_NEUTRAL",
+        "HEARING_EXAM_BANDS",
+        "HEARING_EXAM_WORST",
+        "HEARING_PREFERENCE_LADDER",
+        "HEARING_PREFERENCE_FLOOR",
+        "QUALITY_BONUS_MAX_BY_BENEFIT"
+      ],
+      "sourceFileSha256": "5a84a533d51b0de91840eb9c647988270ac4fba62e7941396fd1c16741287490",
+      "publishedFileSha256": "70f8e1cfd30d6b26e2950e12b9d2989ec2b9551307059ccf87c7c8e2cd3b1886",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/vh-benefit-extraction.mjs",
+      "source": "apps/api/lib/vh-benefit-extraction.mts",
+      "declarations": [
+        "extractVisionScoringInputs",
+        "PER_ITEM_EYEWEAR_CODES",
+        "examLaneCovered",
+        "covered",
+        "serviceRowsPresent",
+        "serviceRowCopay",
+        "copayAmount",
+        "toNumber",
+        "coinsurancePct",
+        "examCoinsurance",
+        "extractHearingScoringInputs",
+        "HEARING_BENEFIT_MODELS",
+        "extractHearingExtras",
+        "HEARING_EXTRAS_COLUMNS"
+      ],
+      "sourceFileSha256": "8f667be884bc0c4d0f7eec513db12758e4c0804c0ebe24715daefbc297975d4b",
+      "publishedFileSha256": "7dbfae9a7b2266c71db76edcb51883882011608259d98cbff184478a2a54c9ef",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/hearing-scoring-service.mjs",
+      "source": "apps/api/services/recommendations/hearing-scoring-service.mts",
+      "declarations": [
+        "scoreHearingBenefitQuality",
+        "deriveAnnualizedPairCapacity",
+        "round2",
+        "scoreAidValue",
+        "scoreHearingExam"
+      ],
+      "sourceFileSha256": "c62feaa98bea9319293eb6bf18b1af553c94bb88c7d80246efc58ed9d107d1cf",
+      "publishedFileSha256": "ad09ee4bc1dc96defd0666eba8e7fad93df93b8c54673b2a30619899c2688a67",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/ma-pharmacy-scoring-service.mjs",
+      "source": "apps/api/services/recommendations/ma-pharmacy-scoring-service.mts",
+      "declarations": [
+        "scorePharmacyNetwork"
+      ],
+      "sourceFileSha256": "28006cb74e03f1e29890bebdd6935efd4a6f11eebfc17ec027067733e4c165f1",
+      "publishedFileSha256": "b80ec5b60eb90161f121931c4e2d7a0f299c822d5b8164d35950d07013bdfff0",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained."
+    },
+    {
+      "file": "planmatch/core/candidate-eligibility.mjs",
+      "source": "apps/api/services/recommendations/ma-candidate-plans-service.mts",
+      "declarations": [
+        "emptyCsnpAdmission",
+        "planIdentityKey",
+        "classifyDsnpEligibility",
+        "CSNP_DROPPED_TRACE_CAP"
+      ],
+      "sourceFileSha256": "8a1a9e0e2a2acd75c9236906033931162111fede7830162ff7eb78df654dea75",
+      "publishedFileSha256": "50f1ba51c005186c117ecc6ca1b535c97a177a0416f13c306cacfdf0acfe108d",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained.",
+      "adapters": [
+        {
+          "name": "filterCandidatePlans",
+          "sourceFunction": "prepareMaCandidateContext",
+          "sourceBlocks": [
+            "requestedPlanTypes through currentPlanKey",
+            "plansToScore through dedupedPlans"
+          ],
+          "notes": "Original in-memory filtering and deduplication statements retained. Lookup results are supplied as maps; original normalization and admission helpers are used. An adapter supplies inputs, initializes the original C-SNP audit accumulator, and returns results. County/state selection, lookups, logging, and response assembly are outside this function."
+        }
+      ]
+    },
+    {
+      "file": "planmatch/core/base-score.mjs",
+      "source": "apps/api/services/recommendations/ma-plan-scoring-service.mts",
+      "declarations": [],
+      "sourceFileSha256": "08578dd9f108c99ee20578a30d7a7089fde5a1dbc747d88247b35ee05d0f760e",
+      "publishedFileSha256": "b87f84552c5c313269e3dab56d7247f05fce95eb4bebbf7a9a63c821b30eb00e",
+      "changes": "TypeScript annotations and comments removed; local imports redirected within this folder; selected runtime declarations exported with function bodies retained.",
+      "adapters": [
+        {
+          "name": "calculateBaseScore",
+          "sourceFunction": "scoreMaPlans",
+          "sourceBlocks": [
+            "premiumScore through overall, excluding benefit/pharmacy helper calls and unused plan-classification locals"
+          ],
+          "notes": "Original numeric scoring statements retained inside a new parameterized wrapper. Drug, provider, benefit and pharmacy helpers are published separately; already-computed signals enter this wrapper. Original environment-based bonus settings remain in use."
+        }
+      ]
     }
   ]
 }

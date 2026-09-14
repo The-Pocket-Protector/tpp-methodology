@@ -1,15 +1,16 @@
 {
   "name": "@the-pocket-protector/methodology",
-  "version": "0.1.0",
+  "version": "0.2.0",
   "private": true,
   "type": "module",
-  "description": "Selected TPP calculation and data-processing functions with synthetic examples and explicit scope.",
+  "description": "PlanMatch decision rules and TPP data-processing functions with synthetic examples and explicit scope.",
   "engines": {
     "node": ">=22.18.0"
   },
   "scripts": {
     "test": "node --test test/*.test.mjs",
     "demo": "node examples/demo.mjs",
-    "demo:pipeline": "node examples/data-pipeline.mjs"
+    "demo:pipeline": "node examples/data-pipeline.mjs",
+    "demo:planmatch": "node examples/planmatch.mjs"
   }
 }
